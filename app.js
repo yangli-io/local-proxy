@@ -4,7 +4,7 @@ var fs = require('fs');
 
 var port = process.env.PORT || 8000;
 var url = 'http://40466884.ngrok.io';
-var localhost = 'http://localhost:' + port;
+var localhost = 'http://jandcad.herokuapp.com';
 
 http.createServer(function(req, res){
 	var options = {
