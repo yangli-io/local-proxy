@@ -23,9 +23,10 @@ http.createServer(function(req, res){
 	for (var i = 0; i < cache.length; i++){
 		var obj = cache[i];
 		if (obj.url === options.url){
+			var response = {};
+			response.headers = obj.headers;
+			res.setHeader("Content-Type", response.headers['content-type']);
 			if (obj.pic){
-				var response = {};
-				response.headers = obj.headers;
 				res.setHeader("Server", response.headers.server);
 			  	res.setHeader("Last-Modified", response.headers['last-modified']);
 			  	res.setHeader("Accept-Ranges", response.headers['accept-ranges']);
@@ -52,7 +53,7 @@ http.createServer(function(req, res){
 	  		res.end(body, 'binary') // Show the HTML for the Google homepage. 
 	  	} else {
 	  		body = body.split('http://localhost').join(localhost);
-	  		cache.push({url: options.url, body: body});
+	  		cache.push({url: options.url, body: body, headers: response.headers});
 	  		res.end(body);
 	  	}
 	  }
