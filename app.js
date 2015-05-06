@@ -3,10 +3,16 @@ var request = require('request');
 var fs = require('fs');
 
 var port = process.env.PORT || 8001;
-var url = 'http://40466884.ngrok.io';
+var url = 'http://{link}.ngrok.io';
 var localhost = 'http://jandcad.herokuapp.com';
 
 http.createServer(function(req, res){
+	var urlParts = req.url.split("?");
+	var subDomain = urlParts.length > 1 ? urlParts[1].split("=")[1] : '465d6aa8';
+	url = url.replace('{link}', subDomain);
+
+	req.url = urlParts[0];
+	console.log(req.url);
 	var options = {
 		url: url + req.url
 	}
@@ -17,7 +23,7 @@ http.createServer(function(req, res){
 	} catch (err) {
 
 	}
-	
+
 	request.get(options, function (error, response, body) {
 	  if (!error && response.statusCode == 200) {
 
