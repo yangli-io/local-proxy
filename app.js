@@ -19,17 +19,30 @@ http.createServer(function(req, res){
 	} catch (err) {
 
 	}
+
+	for (var i = 0; i < cache.length; i++){
+		var obj = cache[i];
+		if (obj.url === options.url){
+			if (obj.pic){
+				res.end(obj.body, 'binary');
+			} else {
+				res.end(obj.body);
+			}
+			return;
+		}
+	}
+
 	request.get(options, function (error, response, body) {
 	  if (!error && response.statusCode == 200) {
 
 	  	var contentType = response.headers['content-type']
 	  	res.setHeader("Content-Type", contentType);
 	  	if (contentType && contentType.indexOf('png') > -1 || req.url.indexOf('.otf') > -1 || req.url.indexOf('.ttf') > -1 || req.url.indexOf('.woff') > -1){
-	  		//cache.push({url: options.url, pic: true, body: body});
+	  		cache.push({url: options.url, pic: true, body: body});
 	  		res.end(body, 'binary') // Show the HTML for the Google homepage. 
 	  	} else {
 	  		body = body.split('http://localhost').join(localhost);
-	  		//cache.push({url: options.url, body: body});
+	  		cache.push({url: options.url, body: body});
 	  		res.end(body);
 	  	}
 	  }
