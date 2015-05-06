@@ -3,16 +3,10 @@ var request = require('request');
 var fs = require('fs');
 
 var port = process.env.PORT || 8001;
-var url = 'http://{link}.ngrok.io';
+var url = 'http://465d6aa8.ngrok.io';
 var localhost = 'http://jandcad.herokuapp.com';
 
 http.createServer(function(req, res){
-	var urlParts = req.url.split("?");
-	var subDomain = urlParts.length > 1 ? urlParts[1].split("=")[1] : '465d6aa8';
-	url = url.replace('{link}', subDomain);
-
-	req.url = urlParts[0];
-	console.log(req.url);
 	var options = {
 		url: url + req.url
 	}
@@ -23,19 +17,18 @@ http.createServer(function(req, res){
 	} catch (err) {
 
 	}
-
+	
 	request.get(options, function (error, response, body) {
 	  if (!error && response.statusCode == 200) {
 
 	  	var contentType = response.headers['content-type']
 	  	res.setHeader("Content-Type", contentType);
 	  	if (contentType && contentType.indexOf('png') > -1 || req.url.indexOf('.otf') > -1 || req.url.indexOf('.ttf') > -1 || req.url.indexOf('.woff') > -1){
-	  		res.setHeader("Server", response.headers.server);
-		  	res.setHeader("Last-Modified", response.headers['last-modified']);
-		  	res.setHeader("Accept-Ranges", response.headers['accept-ranges']);
+	  		//res.setHeader("Server", response.headers.server);
+		  	//res.setHeader("Last-Modified", response.headers['last-modified']);
+		  	//res.setHeader("Accept-Ranges", response.headers['accept-ranges']);
 		  	//res.setHeader("Content-Length", 4270);
-		  	res.setHeader("ETag", response.headers.etag);
-		  	fs.writeFileSync('./test.png', body, 'binary');
+		  	//res.setHeader("ETag", response.headers.etag);
 	  		res.end(body, 'binary') // Show the HTML for the Google homepage. 
 	  	} else {
 	  		body = body.split('http://localhost').join(localhost);
