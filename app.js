@@ -4,7 +4,9 @@ var fs = require('fs');
 
 var port = process.env.PORT || 8001;
 var url = 'http://465d6aa8.ngrok.io';
-var localhost = 'http://jandcad.herokuapp.com';
+var localhost = 'http://localhost:8001';
+
+var cache = [];
 
 http.createServer(function(req, res){
 	var options = {
@@ -17,24 +19,19 @@ http.createServer(function(req, res){
 	} catch (err) {
 
 	}
-	
 	request.get(options, function (error, response, body) {
 	  if (!error && response.statusCode == 200) {
 
 	  	var contentType = response.headers['content-type']
 	  	res.setHeader("Content-Type", contentType);
 	  	if (contentType && contentType.indexOf('png') > -1 || req.url.indexOf('.otf') > -1 || req.url.indexOf('.ttf') > -1 || req.url.indexOf('.woff') > -1){
-	  		//res.setHeader("Server", response.headers.server);
-		  	//res.setHeader("Last-Modified", response.headers['last-modified']);
-		  	//res.setHeader("Accept-Ranges", response.headers['accept-ranges']);
-		  	//res.setHeader("Content-Length", 4270);
-		  	//res.setHeader("ETag", response.headers.etag);
+	  		//cache.push({url: options.url, pic: true, body: body});
 	  		res.end(body, 'binary') // Show the HTML for the Google homepage. 
 	  	} else {
 	  		body = body.split('http://localhost').join(localhost);
+	  		//cache.push({url: options.url, body: body});
 	  		res.end(body);
 	  	}
-	    
 	  }
 	})
 }).listen(port);
