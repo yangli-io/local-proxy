@@ -24,6 +24,12 @@ http.createServer(function(req, res){
 		var obj = cache[i];
 		if (obj.url === options.url){
 			if (obj.pic){
+				var response = {};
+				response.headers = obj.headers;
+				res.setHeader("Server", response.headers.server);
+			  	res.setHeader("Last-Modified", response.headers['last-modified']);
+			  	res.setHeader("Accept-Ranges", response.headers['accept-ranges']);
+			  	res.setHeader("ETag", response.headers.etag);
 				res.end(obj.body, 'binary');
 			} else {
 				res.end(obj.body);
@@ -38,7 +44,11 @@ http.createServer(function(req, res){
 	  	var contentType = response.headers['content-type']
 	  	res.setHeader("Content-Type", contentType);
 	  	if (contentType && contentType.indexOf('png') > -1 || req.url.indexOf('.otf') > -1 || req.url.indexOf('.ttf') > -1 || req.url.indexOf('.woff') > -1){
-	  		cache.push({url: options.url, pic: true, body: body});
+	  		cache.push({url: options.url, pic: true, body: body, headers: response.headers});
+	  		res.setHeader("Server", response.headers.server);
+		  	res.setHeader("Last-Modified", response.headers['last-modified']);
+		  	res.setHeader("Accept-Ranges", response.headers['accept-ranges']);
+		  	res.setHeader("ETag", response.headers.etag);
 	  		res.end(body, 'binary') // Show the HTML for the Google homepage. 
 	  	} else {
 	  		body = body.split('http://localhost').join(localhost);
