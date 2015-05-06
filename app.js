@@ -4,7 +4,7 @@ var fs = require('fs');
 
 var port = process.env.PORT || 8001;
 var url = 'http://465d6aa8.ngrok.io';
-var localhost = 'http://localhost:8001';
+var localhost = process.env.PORT ? 'https://jandcad.herokuapp.com' : 'http://localhost:8001';
 
 var cache = [];
 
